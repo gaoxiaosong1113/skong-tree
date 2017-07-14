@@ -467,7 +467,6 @@ class Tree extends React.Component {
       eventKey: key,
       pos,
       selectable,
-      inits: props.inits,
       loadData: props.loadData,
       onMouseEnter: props.onMouseEnter,
       onMouseLeave: props.onMouseLeave,
@@ -485,6 +484,7 @@ class Tree extends React.Component {
       openTransitionName: this.getOpenTransitionName(),
       openAnimation: props.openAnimation,
       filterTreeNode: this.filterTreeNode.bind(this),
+      defaultEditable: props.defaultEditable
     };
     if (props.checkable) {
       cloneProps.checkable = props.checkable;
@@ -594,6 +594,7 @@ Tree.propTypes = {
   draggable: PropTypes.bool,
   autoExpandParent: PropTypes.bool,
   defaultExpandAll: PropTypes.bool,
+  defaultEditable: PropTypes.bool,
   defaultExpandedKeys: PropTypes.arrayOf(PropTypes.string),
   expandedKeys: PropTypes.arrayOf(PropTypes.string),
   defaultCheckedKeys: PropTypes.arrayOf(PropTypes.string),
@@ -632,6 +633,7 @@ Tree.defaultProps = {
   draggable: false,
   autoExpandParent: true,
   defaultExpandAll: false,
+  defaultEditable: false,
   defaultExpandedKeys: [],
   defaultCheckedKeys: [],
   defaultSelectedKeys: [],

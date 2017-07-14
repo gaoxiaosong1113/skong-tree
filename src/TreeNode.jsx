@@ -16,7 +16,6 @@ const defaultTitle = '---';
 class TreeNode extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       dataLoading: false,
       dragNodeHighlight: false,
@@ -30,6 +29,7 @@ class TreeNode extends React.Component {
     }
     this.props.root._treeNodeInstances.push(this);
   }
+
   // shouldComponentUpdate(nextProps) {
   //   if (!nextProps.expanded) {
   //     return false;
@@ -69,11 +69,7 @@ class TreeNode extends React.Component {
     }
   }
 
-  onChange = (e) => {
-    e.preventDefault();
-    this.props.inits(e, this)
-    this.props.root.onContextChange(e, this);
-  }
+
   onBlur = (e) => {
     e.preventDefault();
     e.stopPropagation()
@@ -134,7 +130,6 @@ class TreeNode extends React.Component {
   }
 
   onExpand = () => {
-    console.log(3)
     const callbackPromise = this.props.root.onExpand(this);
     if (callbackPromise && typeof callbackPromise === 'object') {
       const setLoading = (dataLoading) => {
@@ -154,6 +149,21 @@ class TreeNode extends React.Component {
     e.preventDefault();
   }
 
+  onChange = (e) => {
+    e.preventDefault();
+    this.props.inits(e, this)
+  }
+
+  add = (e) => {
+    e.preventDefault();
+    this.props.add(e, this)
+  }
+
+  remove = (e) => {
+    e.preventDefault();
+    this.props.remove(e, this)
+  }
+
   renderSwitcher(props, expandedState) {
     const prefixCls = props.prefixCls;
     const switcherCls = {
@@ -171,7 +181,7 @@ class TreeNode extends React.Component {
       switcherCls[`${prefixCls}-switcher-disabled`] = true;
       return <span className={classNames(switcherCls)}></span>;
     }
-    return <span className={classNames(switcherCls)} onClick={this.onExpand} onDoubleClick={this.onDoubleClick}></span>;
+    return <span className={classNames(switcherCls)} onClick={this.onExpand} ></span>;
   }
 
   renderCheckbox(props) {
@@ -275,12 +285,22 @@ class TreeNode extends React.Component {
     const selectHandle = () => {
       const icon = (props.showIcon || props.loadData && this.state.dataLoading) ?
         <span className={classNames(iconEleCls)}></span> : null;
-      const title = <span className={`${prefixCls}-title`} onDoubleClick={this.onDoubleClick}>{content}</span>;
-      const input = <input className={`${prefixCls}-input`} defaultValue={content} onChange={this.onChange} onBlur={this.onBlur} />;
+
       const wrap = `${prefixCls}-node-content-wrapper`;
       const domProps = {
         className: `${wrap} ${wrap}-${iconState === expandedState ? iconState : 'normal'}`,
       };
+      var title = <span className={`${prefixCls}-title`} >{content}</span>;
+      var input = null
+      var add = <button className={`${prefixCls}-add-input`} onClick={this.add}>+</button>;
+      var remove = <button className={`${prefixCls}-remove-input`} onClick={this.remove}>-</button>;
+      if (props.disabled) {
+        input = null;
+        button = null
+      } else {
+        title = props.defaultEditable ? <span className={`${prefixCls}-title`} onDoubleClick={this.onDoubleClick}> {content}</span> : <span className={`${prefixCls}-title`} >{content}</span>;
+        input = props.defaultEditable ? <input className={`${prefixCls}-input`} defaultValue={content} onChange={this.onChange} onBlur={this.onBlur} /> : null;
+      }
       if (!props.disabled) {
         if (props.selected || !props._dropTrigger && this.state.dragNodeHighlight) {
           domProps.className += ` ${prefixCls}-node-selected`;
@@ -319,6 +339,8 @@ class TreeNode extends React.Component {
         <span ref="selectHandle" title={typeof content === 'string' ? content : ''} {...domProps}>
           {icon}
           {this.state.editor ? input : title}
+          {add}
+          {remove}
         </span>
       );
     };
@@ -384,7 +406,9 @@ TreeNode.propTypes = {
   root: PropTypes.object,
   onSelect: PropTypes.func,
   onChange: PropTypes.func,
-  inits: PropTypes.func
+  inits: PropTypes.func,
+  add: PropTypes.func,
+  remove: PropTypes.func
 };
 
 TreeNode.defaultProps = {

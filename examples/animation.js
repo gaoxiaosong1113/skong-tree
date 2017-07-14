@@ -49,9 +49,15 @@ const animation = {
   }
 };
 class Demo extends React.Component {
-  init(e, treeNode) {
+  init = (e, treeNode) => {
     console.log(treeNode)
     console.log(e.target.value)
+  }
+  add = (e, treeNode) => {
+    console.log('增加')
+  }
+  remove = (e, treeNode) => {
+    console.log('删除')
   }
   render() {
     return (
@@ -62,16 +68,16 @@ class Demo extends React.Component {
           defaultExpandAll={false}
           defaultExpandedKeys={['p1']}
           openAnimation={animation}
-          inits={this.init}
+          defaultEditable={true}
         >
-          <TreeNode title="parent 1" inits={this.init} key="p1">
-            <TreeNode key="p10" inits={this.init} title="leaf" />
-            <TreeNode title="parent 1-1" inits={this.init} key="p11">
-              <TreeNode title="parent 2-1" inits={this.init} key="p21">
-                <TreeNode title="leaf" inits={this.init} />
-                <TreeNode title="leaf" inits={this.init} />
+          <TreeNode title="parent 1" key="p1" inits={this.init} add={this.add} remove={this.remove}>
+            <TreeNode key="p10" title="leaf" inits={this.init} add={this.add} remove={this.remove} />
+            <TreeNode title="parent 1-1" key="p11" inits={this.init} add={this.add} remove={this.remove}>
+              <TreeNode add={this.add} remove={this.remove} title="parent 2-1" inits={this.init} key="p21">
+                <TreeNode add={this.add} remove={this.remove} title="leaf" inits={this.init} />
+                <TreeNode add={this.add} remove={this.remove} title="leaf" inits={this.init} />
               </TreeNode>
-              <TreeNode key="p22" title="leaf" inits={this.init} />
+              <TreeNode key="p22" add={this.add} remove={this.remove} title="leaf" inits={this.init} />
             </TreeNode>
           </TreeNode>
         </Tree>
