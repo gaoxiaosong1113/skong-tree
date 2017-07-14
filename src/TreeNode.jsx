@@ -19,7 +19,8 @@ class TreeNode extends React.Component {
     this.state = {
       dataLoading: false,
       dragNodeHighlight: false,
-      editor: false
+      editor: false,
+      add: false
     };
   }
 
@@ -69,13 +70,6 @@ class TreeNode extends React.Component {
     }
   }
 
-
-  onBlur = (e) => {
-    e.preventDefault();
-    e.stopPropagation()
-    this.setState({ editor: false })
-    return false
-  }
   onDragStart = (e) => {
     // console.log('dragstart', this.props.eventKey, e);
     // e.preventDefault();
@@ -151,16 +145,41 @@ class TreeNode extends React.Component {
 
   onChange = (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    // this.props.inits(e, this)
+  }
+  onBlur = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ editor: false })
     this.props.inits(e, this)
+    return false
+  }
+  onChangeAdd = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
   }
 
+  onBlurAdd = (e) => {
+    e.preventDefault();
+    this.setState({ add: false })
+    this.props.add(e, this)
+
+  }
+  defClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   add = (e) => {
     e.preventDefault();
-    this.props.add(e, this)
+    e.stopPropagation();
+    this.setState({ add: true })
+
   }
 
   remove = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     this.props.remove(e, this)
   }
 
@@ -292,14 +311,14 @@ class TreeNode extends React.Component {
       };
       var title = <span className={`${prefixCls}-title`} >{content}</span>;
       var input = null
-      var add = <button className={`${prefixCls}-add-input`} onClick={this.add}>+</button>;
-      var remove = <button className={`${prefixCls}-remove-input`} onClick={this.remove}>-</button>;
+      var addInput = <input className={`${prefixCls}-addInput`} onClick={this.defClick} onChange={this.onChangeAdd} onBlur={this.onBlurAdd} />
+      const add = <button className={`${prefixCls}-add-input`} onClick={this.add}>+</button>;
+      const remove = <button className={`${prefixCls}-remove-input`} onClick={this.remove}>-</button>;
       if (props.disabled) {
         input = null;
-        button = null
       } else {
         title = props.defaultEditable ? <span className={`${prefixCls}-title`} onDoubleClick={this.onDoubleClick}> {content}</span> : <span className={`${prefixCls}-title`} >{content}</span>;
-        input = props.defaultEditable ? <input className={`${prefixCls}-input`} defaultValue={content} onChange={this.onChange} onBlur={this.onBlur} /> : null;
+        input = props.defaultEditable ? <input className={`${prefixCls}-input`} onClick={this.defClick} defaultValue={content} onChange={this.onChange} onBlur={this.onBlur} /> : null;
       }
       if (!props.disabled) {
         if (props.selected || !props._dropTrigger && this.state.dragNodeHighlight) {
@@ -341,6 +360,7 @@ class TreeNode extends React.Component {
           {this.state.editor ? input : title}
           {add}
           {remove}
+          {this.state.add ? addInput : null}
         </span>
       );
     };
@@ -408,7 +428,9 @@ TreeNode.propTypes = {
   onChange: PropTypes.func,
   inits: PropTypes.func,
   add: PropTypes.func,
-  remove: PropTypes.func
+  remove: PropTypes.func,
+  onChangeAdd: PropTypes.func,
+  onBlurAdd: PropTypes.func
 };
 
 TreeNode.defaultProps = {

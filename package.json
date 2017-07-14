@@ -1,6 +1,6 @@
 {
   "name": "skong-tree",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "tree ui component for react",
   "keywords": [
     "react",
@@ -26,10 +26,6 @@
   },
   "homepage": "https://github.com/gaoxiaosong1113/skong-tree.git",
   "author": "hualei5280@gmail.com",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:react-component/tree.git"
-  },
   "bugs": {
     "url": "https://github.com/gaoxiaosong1113/skong-tree.git/issues"
   },
@@ -45,17 +41,9 @@
     "start": "rc-tools run server",
     "pub": "rc-tools run pub --babel-runtime",
     "lint": "rc-tools run lint",
-    "test": "jest",
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*"
-    ],
-    "transform": {
-      "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
-    }
-  },
+
   "devDependencies": {
     "coveralls": "^2.11.15",
     "css-animation": "^1.2.0",
@@ -79,8 +67,5 @@
     "prop-types": "^15.5.8",
     "rc-animate": "2.x",
     "rc-util": "^4.0.4"
-  },
-  "pre-commit": [
-    "lint"
-  ]
+  }
 }
