@@ -2210,19 +2210,104 @@ var Demo = function (_React$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_possibleConstructorReturn___default()(this, (_ref = Demo.__proto__ || Object.getPrototypeOf(Demo)).call.apply(_ref, [this].concat(args))), _this), _this.init = function (e, treeNode) {
+    return _ret = (_temp = (_this = __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_possibleConstructorReturn___default()(this, (_ref = Demo.__proto__ || Object.getPrototypeOf(Demo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      data: [{
+        key: "0-0",
+        title: "0-0",
+        children: [{
+          key: "0-0-0",
+          title: "0-0-0",
+          children: [{
+            key: "0-0-0-0",
+            title: "0-0-0-0"
+          }]
+        }]
+      }, {
+        key: "0-1",
+        title: "0-1",
+        children: [{
+          key: "0-1-0",
+          title: "0-1-0",
+          children: [{
+            key: "0-1-0-0",
+            title: "0-1-0-0"
+          }]
+        }, {
+          key: "0-2-0",
+          title: "0-2-0",
+          children: [{
+            key: "0-2-0-0",
+            title: "0-2-0-0"
+          }]
+        }]
+      }]
+    }, _this.init = function (e, treeNode) {
       console.log(treeNode);
       console.log(e.target.value);
+      _this.datas = _this.state.data;
+      if (treeNode.props.eventKey) {
+        _this.addArr(_this.datas, treeNode.props.eventKey, e.target.value, function (calldata) {
+          calldata.title = e.target.value;
+          calldata.key = e.target.value;
+        });
+      }
     }, _this.add = function (e, treeNode) {
-      console.log('增加');
+      _this.datas = _this.state.data;
+      if (treeNode.props.eventKey) {
+        _this.addArr(_this.datas, treeNode.props.eventKey, e.target.value, function (calldata) {
+          console.log(calldata);
+          var obj = {
+            title: e.target.value,
+            key: e.target.value
+          };
+          if (calldata.children == undefined) {
+            calldata.children = [];
+          }
+          calldata.children.push(obj);
+        });
+      }
+    }, _this.addArr = function (data, key, value, callbank) {
+      console.log(value);
+      for (var i = 0; i < data.length; i++) {
+        for (var s in data[i]) {
+          if (key == data[i][s]) {
+            callbank(data[i], data, i);
+            break;
+          }
+          if (data[i][s] instanceof Array) {
+            _this.addArr(data[i][s], key, value, callbank);
+          }
+        }
+      }
+      _this.setState({ data: _this.datas });
     }, _this.remove = function (e, treeNode) {
       console.log('删除');
+      _this.datas = _this.state.data;
+      if (treeNode.props.eventKey) {
+        _this.addArr(_this.datas, treeNode.props.eventKey, e.target.value, function (calldata, olddata, index) {
+          olddata.splice(index, 1);
+        });
+      }
     }, _temp), __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_possibleConstructorReturn___default()(_this, _ret);
   }
 
   __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_createClass___default()(Demo, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
+      var loop = function loop(data) {
+        return data.map(function (item) {
+          if (item.children && item.children.length) {
+            return __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
+              __WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"],
+              { key: item.key, title: item.title, remove: _this2.remove, add: _this2.add, inits: _this2.init },
+              loop(item.children)
+            );
+          }
+          return __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"], { key: item.key, title: item.title, remove: _this2.remove, add: _this2.add, inits: _this2.init });
+        });
+      };
       return __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
         'div',
         null,
@@ -2235,27 +2320,10 @@ var Demo = function (_React$Component) {
         __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
           __WEBPACK_IMPORTED_MODULE_7_rc_tree___default.a,
           {
-            defaultExpandAll: false,
-            defaultExpandedKeys: ['p1'],
-            openAnimation: animation,
+            className: 'draggable-tree',
             defaultEditable: true
           },
-          __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
-            __WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"],
-            { title: 'parent 1', key: 'p1', inits: this.init, add: this.add, remove: this.remove },
-            __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"], { key: 'p10', title: 'leaf', inits: this.init, add: this.add, remove: this.remove }),
-            __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
-              __WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"],
-              { title: 'parent 1-1', key: 'p11', inits: this.init, add: this.add, remove: this.remove },
-              __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(
-                __WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"],
-                { add: this.add, remove: this.remove, title: 'parent 2-1', inits: this.init, key: 'p21' },
-                __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"], { add: this.add, remove: this.remove, title: 'leaf', inits: this.init }),
-                __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"], { add: this.add, remove: this.remove, title: 'leaf', inits: this.init })
-              ),
-              __WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7_rc_tree__["TreeNode"], { key: 'p22', add: this.add, remove: this.remove, title: 'leaf', inits: this.init })
-            )
-          )
+          loop(this.state.data)
         )
       );
     }
